@@ -9,12 +9,12 @@ Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 
 
 // Assigns ports to motors
-Adafruit_DCMotor *leftMotor = AFMS.getMotor(1); //assigns the left motor to port M1
-Adafruit_DCMotor *rightMotor = AFMS.getMotor(2); //assigns the right motor to port M2
+Adafruit_DCMotor *leftMotor = AFMS.getMotor(4); //assigns the left motor to port M4
+Adafruit_DCMotor *rightMotor = AFMS.getMotor(3); //assigns the right motor to port M3
 
 // Assigns IR sensor components to pins
-int leftSigPin = 4; // For sensor signal
-int rightSigPin = 4; // For sensor signal
+int leftSigPin = A5; // For sensor signal
+int rightSigPin = A4; // For sensor signal
 int leftValue = 0; // Holds the returned value
 int rightValue = 0; // Holds the returned value
 

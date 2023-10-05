@@ -24,10 +24,11 @@ int leftCutOff = 800; // Cut off reading for the left sensor.
 
 void setup() {
   Serial.begin(9600);
+
   pinMode(leftSigPin, INPUT); // signal pin as input
   pinMode(rightSigPin, INPUT); // signal pin as input
 
-  Serial.println("Adafruit Motorshield v2 - DC Motor test!");
+  Serial.println("Code Begin!");
 
   if (!AFMS.begin()) {         // create with the default frequency 1.6KHz
   // if (!AFMS.begin(1000)) {  // OR with a different frequency, say 1KHz
@@ -40,7 +41,7 @@ void setup() {
   leftMotor->setSpeed(20);
   leftMotor->run(FORWARD);
   rightMotor->setSpeed(50);
-  rightMotor->run(FORWARD);
+  rightMotor->run(BACKWARD); //Right motor's "backward" is actually forward
   // turn on motor
   leftMotor->run(RELEASE);
   rightMotor->run(RELEASE);
@@ -55,9 +56,9 @@ void loop() {
   // Go straight
   if (leftValue < leftCutOff and rightValue < rightCutOff) { // Neither sensor is on the line
     leftMotor->run(FORWARD);
-    rightMotor->run(FORWARD);
-    leftMotor->setSpeed(20);
-    rightMotor->setSpeed(20);
+    rightMotor->run(BACKWARD);
+    leftMotor->setSpeed(100);
+    rightMotor->setSpeed(100);
     delay(5);
 
     Serial.println("Straight"); // Write on console
@@ -66,9 +67,9 @@ void loop() {
   // Turn right
   else if (leftValue < leftCutOff and rightValue >= rightCutOff) { // Right sensor is on the line
     leftMotor->run(FORWARD);
-    rightMotor->run(BACKWARD);
-    leftMotor->setSpeed(20);
-    rightMotor->setSpeed(20);
+    rightMotor->run(FORWARD);
+    leftMotor->setSpeed(100);
+    rightMotor->setSpeed(100);
     delay(5);
     Serial.println("Right"); // Write on console
   } 
@@ -76,9 +77,9 @@ void loop() {
   // Turn left
   else if (leftValue >= leftCutOff and rightValue < rightCutOff) { // Left sensor is on the line
     leftMotor->run(BACKWARD);
-    rightMotor->run(FORWARD);
-    leftMotor->setSpeed(20);
-    rightMotor->setSpeed(20);
+    rightMotor->run(BACKWARD);
+    leftMotor->setSpeed(100);
+    rightMotor->setSpeed(100);
     delay(5);
     Serial.println("Left"); // Write on console
   } 
@@ -86,9 +87,9 @@ void loop() {
   // Double line detected: go forward slowly
   else if (leftValue >= leftCutOff and rightValue >= rightCutOff) { // Both sensors are on the line?
     leftMotor->run(FORWARD);
-    rightMotor->run(FORWARD);
-    leftMotor->setSpeed(10);
-    rightMotor->setSpeed(10);
+    rightMotor->run(BACKWARD);
+    leftMotor->setSpeed(100);
+    rightMotor->setSpeed(100);
     delay(5);
     Serial.println("Double Line Detected"); // Write on console
   } 

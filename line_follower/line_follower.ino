@@ -18,6 +18,9 @@ int rightSigPin = 4; // For sensor signal
 int leftValue = 0; // Holds the returned value
 int rightValue = 0; // Holds the returned value
 
+// Assigns cut off readings for each sensor. If the sensor reads this value or higher then, based on our measurements, it is on the line.
+int rightCutOff = 800; // Cut off reading for the right sensor.
+int leftCutOff = 800; // Cut off reading for the left sensor.
 
 void setup() {
   Serial.begin(9600);
@@ -50,7 +53,7 @@ void loop() {
   rightValue = digitalRead(rightSigPin); // Read the sensor
 
   // Go straight
-  if (leftValue == LOW and rightValue == LOW) { 
+  if (leftValue < leftCutOff and rightValue < rightCutOff) { // Neither sensor is on the line
     leftMotor->run(FORWARD);
     rightMotor->run(FORWARD);
     leftMotor->setSpeed(20);
@@ -61,7 +64,7 @@ void loop() {
   } 
 
   // Turn right
-  else if (leftValue == LOW and rightValue == HIGH) { 
+  else if (leftValue < leftCutOff and rightValue >= rightCutOff) { // Right sensor is on the line
     leftMotor->run(FORWARD);
     rightMotor->run(BACKWARD);
     leftMotor->setSpeed(20);
@@ -71,7 +74,7 @@ void loop() {
   } 
 
   // Turn left
-  else if (leftValue == HIGH and rightValue == LOW) { 
+  else if (leftValue >= leftCutOff and rightValue < rightCutOff) { // Left sensor is on the line
     leftMotor->run(BACKWARD);
     rightMotor->run(FORWARD);
     leftMotor->setSpeed(20);
@@ -80,8 +83,8 @@ void loop() {
     Serial.println("Left"); // Write on console
   } 
 
-  // Double line detected 
-  else if (leftValue == HIGH and rightValue == HIGH) {
+  // Double line detected: go forward slowly
+  else if (leftValue >= leftCutOff and rightValue >= rightCutOff) { // Both sensors are on the line?
     leftMotor->run(FORWARD);
     rightMotor->run(FORWARD);
     leftMotor->setSpeed(10);

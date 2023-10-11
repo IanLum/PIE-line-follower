@@ -13,14 +13,17 @@ Adafruit_DCMotor *leftMotor = AFMS.getMotor(4); //assigns the left motor to port
 Adafruit_DCMotor *rightMotor = AFMS.getMotor(3); //assigns the right motor to port M3
 
 // Assigns IR sensor components to pins
-int leftSigPin = A5; // For sensor signal
-int rightSigPin = A4; // For sensor signal
+int leftSigPin = A1; // For sensor signal
+int rightSigPin = A0; // For sensor signal
 int leftValue = 0; // Holds the returned value
 int rightValue = 0; // Holds the returned value
 
 // Assigns cut off readings for each sensor. If the sensor reads this value or higher then, based on our measurements, it is on the line.
 int rightCutOff = 800; // Cut off reading for the right sensor.
 int leftCutOff = 800; // Cut off reading for the left sensor.
+
+//sets speed of all wheels
+int speed = 25;
 
 void setup() {
   Serial.begin(9600);
@@ -38,29 +41,31 @@ void setup() {
   Serial.println("Motor Shield found.");
 
   // Set the speed to start, from 0 (off) to 255 (max speed)
-  leftMotor->setSpeed(20);
+  leftMotor->setSpeed(50);
   leftMotor->run(FORWARD);
   rightMotor->setSpeed(50);
   rightMotor->run(BACKWARD); //Right motor's "backward" is actually forward
   // turn on motor
   leftMotor->run(RELEASE);
   rightMotor->run(RELEASE);
+
 }
 
 void loop() {
   uint8_t i;
 
-  leftValue = digitalRead(leftSigPin); // Read the sensor
-  rightValue = digitalRead(rightSigPin); // Read the sensor
+  leftValue = analogRead(leftSigPin); // Read the sensor
+  rightValue = analogRead(rightSigPin); // Read the sensor
 
   // Go straight
   if (leftValue < leftCutOff and rightValue < rightCutOff) { // Neither sensor is on the line
     leftMotor->run(FORWARD);
     rightMotor->run(BACKWARD);
-    leftMotor->setSpeed(100);
-    rightMotor->setSpeed(100);
+    leftMotor->setSpeed(speed);
+    rightMotor->setSpeed(speed);
     delay(5);
-
+    Serial.println(leftValue);
+    Serial.println(rightValue);
     Serial.println("Straight"); // Write on console
   } 
 
@@ -68,8 +73,8 @@ void loop() {
   else if (leftValue < leftCutOff and rightValue >= rightCutOff) { // Right sensor is on the line
     leftMotor->run(FORWARD);
     rightMotor->run(FORWARD);
-    leftMotor->setSpeed(100);
-    rightMotor->setSpeed(100);
+    leftMotor->setSpeed(speed);
+    rightMotor->setSpeed(speed);
     delay(5);
     Serial.println("Right"); // Write on console
   } 
@@ -78,19 +83,19 @@ void loop() {
   else if (leftValue >= leftCutOff and rightValue < rightCutOff) { // Left sensor is on the line
     leftMotor->run(BACKWARD);
     rightMotor->run(BACKWARD);
-    leftMotor->setSpeed(100);
-    rightMotor->setSpeed(100);
+    leftMotor->setSpeed(speed);
+    rightMotor->setSpeed(speed);
     delay(5);
     Serial.println("Left"); // Write on console
   } 
 
-  // Double line detected: go forward slowly
+  // Double line detected: go left slowly
   else if (leftValue >= leftCutOff and rightValue >= rightCutOff) { // Both sensors are on the line?
-    leftMotor->run(FORWARD);
+    leftMotor->run(BACKWARD);
     rightMotor->run(BACKWARD);
-    leftMotor->setSpeed(100);
-    rightMotor->setSpeed(100);
-    delay(5);
+    leftMotor->setSpeed(speed);
+    rightMotor->setSpeed(speed);
+    delay(500);
     Serial.println("Double Line Detected"); // Write on console
   } 
 

@@ -44,7 +44,7 @@ void setup() {
   leftMotor->setSpeed(50);
   leftMotor->run(FORWARD);
   rightMotor->setSpeed(50);
-  rightMotor->run(BACKWARD); //Right motor's "backward" is actually forward
+  rightMotor->run(FORWARD);
   // turn on motor
   leftMotor->run(RELEASE);
   rightMotor->run(RELEASE);
@@ -60,19 +60,17 @@ void loop() {
   // Go straight
   if (leftValue < leftCutOff and rightValue < rightCutOff) { // Neither sensor is on the line
     leftMotor->run(FORWARD);
-    rightMotor->run(BACKWARD);
+    rightMotor->run(FORWARD);
     leftMotor->setSpeed(speed);
     rightMotor->setSpeed(speed);
     delay(5);
-    Serial.println(leftValue);
-    Serial.println(rightValue);
     Serial.println("Straight"); // Write on console
   } 
 
   // Turn right
   else if (leftValue < leftCutOff and rightValue >= rightCutOff) { // Right sensor is on the line
     leftMotor->run(FORWARD);
-    rightMotor->run(FORWARD);
+    rightMotor->run(BACKWARD);
     leftMotor->setSpeed(speed);
     rightMotor->setSpeed(speed);
     delay(5);
@@ -82,7 +80,7 @@ void loop() {
   // Turn left
   else if (leftValue >= leftCutOff and rightValue < rightCutOff) { // Left sensor is on the line
     leftMotor->run(BACKWARD);
-    rightMotor->run(BACKWARD);
+    rightMotor->run(FORWARD);
     leftMotor->setSpeed(speed);
     rightMotor->setSpeed(speed);
     delay(5);
@@ -92,7 +90,7 @@ void loop() {
   // Double line detected: go left slowly
   else if (leftValue >= leftCutOff and rightValue >= rightCutOff) { // Both sensors are on the line?
     leftMotor->run(BACKWARD);
-    rightMotor->run(BACKWARD);
+    rightMotor->run(FORWARD);
     leftMotor->setSpeed(speed);
     rightMotor->setSpeed(speed);
     delay(500);

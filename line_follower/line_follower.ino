@@ -2,6 +2,7 @@
 PIE MP3: This code makes a robot follow along a path by using data collected by two sensors as it drives.
 */
 
+#include <string.h>
 #include <Adafruit_MotorShield.h>
 
 // Create the motor shield object with the default I2C address
@@ -51,44 +52,34 @@ void loop() {
   leftValue = analogRead(leftSigPin); // Read the sensor
   rightValue = analogRead(rightSigPin); // Read the sensor
 
+  int leftDir = FORWARD;
+  int rightDir = FORWARD;
+  String serialOut;
+
   // Go straight
   if (leftValue < leftCutOff and rightValue < rightCutOff) { // Neither sensor is on the line
-    leftMotor->run(FORWARD);
-    rightMotor->run(FORWARD);
-    leftMotor->setSpeed(speed);
-    rightMotor->setSpeed(speed);
-    delay(5);
-    Serial.println("Straight"); // Write on console
+    serialOut = "Straight";
   } 
-
   // Turn right
   else if (leftValue < leftCutOff and rightValue >= rightCutOff) { // Right sensor is on the line
-    leftMotor->run(FORWARD);
-    rightMotor->run(BACKWARD);
-    leftMotor->setSpeed(speed);
-    rightMotor->setSpeed(speed);
-    delay(5);
-    Serial.println("Right"); // Write on console
+    rightDir = BACKWARD;
+    serialOut = "Right";
   } 
-
   // Turn left
   else if (leftValue >= leftCutOff and rightValue < rightCutOff) { // Left sensor is on the line
-    leftMotor->run(BACKWARD);
-    rightMotor->run(FORWARD);
-    leftMotor->setSpeed(speed);
-    rightMotor->setSpeed(speed);
-    delay(5);
-    Serial.println("Left"); // Write on console
+    leftDir = BACKWARD;
+    serialOut = "Left";
   } 
-
   // Double line detected: go left slowly
   else if (leftValue >= leftCutOff and rightValue >= rightCutOff) { // Both sensors are on the line?
-    leftMotor->run(BACKWARD);
-    rightMotor->run(FORWARD);
-    leftMotor->setSpeed(speed);
-    rightMotor->setSpeed(speed);
-    delay(500);
-    Serial.println("Double Line Detected"); // Write on console
+    leftDir = BACKWARD;
+    serialOut = "Double Line";
   } 
 
+  leftMotor->run(leftDir);
+  rightMotor->run(rightDir);
+  leftMotor->setSpeed(speed);
+  rightMotor->setSpeed(speed);
+  delay(5);
+  Serial.println(serialOut);
 }

@@ -40,12 +40,6 @@ void setup() {
   }
   Serial.println("Motor Shield found.");
 
-  // Set the speed to start, from 0 (off) to 255 (max speed)
-  leftMotor->setSpeed(50);
-  leftMotor->run(FORWARD);
-  rightMotor->setSpeed(50);
-  rightMotor->run(FORWARD);
-  // turn on motor
   leftMotor->run(RELEASE);
   rightMotor->run(RELEASE);
 

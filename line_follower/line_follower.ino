@@ -23,6 +23,8 @@ int rightValue = 0; // Holds the returned value
 int rightCutOff = 800; // Cut off reading for the right sensor.
 int leftCutOff = 800; // Cut off reading for the left sensor.
 
+float speedMultiplier = 1;
+
 void setup() {
   Serial.begin(9600);
 
@@ -42,12 +44,13 @@ void setup() {
   rightMotor->run(RELEASE);
 
 }
-
 void loop() {
-  uint8_t i;
-
   leftValue = analogRead(leftSigPin); // Read the sensor
   rightValue = analogRead(rightSigPin); // Read the sensor
+
+  if (Serial.available() > 0) {
+    speedMultiplier = Serial.parseFloat(); // SET SERIAL INPUT TO "No Line Ending"
+  }
 
   int leftDir = FORWARD;
   int rightDir = FORWARD;
@@ -81,8 +84,8 @@ void loop() {
 
   leftMotor->run(leftDir);
   rightMotor->run(rightDir);
-  leftMotor->setSpeed(leftSpeed);
-  rightMotor->setSpeed(rightSpeed);
+  leftMotor->setSpeed(leftSpeed*speedMultiplier);
+  rightMotor->setSpeed(rightSpeed*speedMultiplier);
   delay(duration);
-  Serial.println(serialOut);
+  // Serial.println(serialOut);
 }

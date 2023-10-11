@@ -53,6 +53,7 @@ void loop() {
   int rightDir = FORWARD;
   int leftSpeed = 25;
   int rightSpeed = 25;
+  int duration = 5;
   String serialOut;
 
   // Go straight
@@ -69,9 +70,12 @@ void loop() {
     leftDir = BACKWARD;
     serialOut = "Left";
   } 
-  // Double line detected: go left slowly
+  // Double line detected: go left for a set amount of time
   else if (leftValue >= leftCutOff and rightValue >= rightCutOff) { // Both sensors are on the line?
+    rightSpeed = 30;
     leftDir = BACKWARD;
+    leftSpeed = 20;
+    duration = 600;
     serialOut = "Double Line";
   } 
 
@@ -79,6 +83,6 @@ void loop() {
   rightMotor->run(rightDir);
   leftMotor->setSpeed(leftSpeed);
   rightMotor->setSpeed(rightSpeed);
-  delay(5);
+  delay(duration);
   Serial.println(serialOut);
 }

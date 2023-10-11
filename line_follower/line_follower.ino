@@ -23,9 +23,6 @@ int rightValue = 0; // Holds the returned value
 int rightCutOff = 800; // Cut off reading for the right sensor.
 int leftCutOff = 800; // Cut off reading for the left sensor.
 
-//sets speed of all wheels
-int speed = 25;
-
 void setup() {
   Serial.begin(9600);
 
@@ -54,6 +51,8 @@ void loop() {
 
   int leftDir = FORWARD;
   int rightDir = FORWARD;
+  int leftSpeed = 25;
+  int rightSpeed = 25;
   String serialOut;
 
   // Go straight
@@ -78,8 +77,8 @@ void loop() {
 
   leftMotor->run(leftDir);
   rightMotor->run(rightDir);
-  leftMotor->setSpeed(speed);
-  rightMotor->setSpeed(speed);
+  leftMotor->setSpeed(leftSpeed);
+  rightMotor->setSpeed(rightSpeed);
   delay(5);
   Serial.println(serialOut);
 }

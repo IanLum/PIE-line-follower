@@ -1,5 +1,5 @@
 /*
-PIE MP3: This code makes a robot follow along a path by using data collected by two sensors as it drives.
+PIE Mini-Project 3: This code makes a robot follow along a path by using data collected by two sensors as it drives.
 */
 
 #include <string.h>
@@ -33,13 +33,14 @@ void setup() {
 
   Serial.println("Code Begin!");
 
+  // checks the connection of the Motor Shield
   if (!AFMS.begin()) {         // create with the default frequency 1.6KHz
-  // if (!AFMS.begin(1000)) {  // OR with a different frequency, say 1KHz
     Serial.println("Could not find Motor Shield. Check wiring.");
     while (1);
   }
   Serial.println("Motor Shield found.");
 
+  // turn on motors
   leftMotor->run(RELEASE);
   rightMotor->run(RELEASE);
 
@@ -52,10 +53,13 @@ void loop() {
     speedMultiplier = Serial.parseFloat(); // SET SERIAL INPUT TO "No Line Ending"
   }
 
+  // sets variables to be the base speed and directions for the wheels in the "forward" case.
+  // these variables might be modified later on in the loop based on the sensor values collected.
   int leftDir = FORWARD;
   int rightDir = FORWARD;
   int leftSpeed = 25;
   int rightSpeed = 25;
+  // sets base delay time
   int duration = 5;
   String serialOut;
 
@@ -74,7 +78,7 @@ void loop() {
     serialOut = "Left";
   } 
   // Double line detected: go right for a set amount of time
-  else if (leftValue >= leftCutOff and rightValue >= rightCutOff) { // Both sensors are on the line?
+  else if (leftValue >= leftCutOff and rightValue >= rightCutOff) { // Both sensors are on the line -- used for sharp corners
     rightSpeed = 20;
     rightDir = BACKWARD;
     leftSpeed = 30;
@@ -82,6 +86,7 @@ void loop() {
     serialOut = "Double Line";
   } 
 
+  // move along the line with the newly defined speeds and wheel directions for a specified duration.
   leftMotor->run(leftDir);
   rightMotor->run(rightDir);
   leftMotor->setSpeed(leftSpeed*speedMultiplier);
